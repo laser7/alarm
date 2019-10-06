@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Alarm Clock</title>
+    <link rel="stylesheet" href="style.css">
+    <title>My Alarm Clock</title>
     <script src="https://vuejs.org/js/vue.js"></script>
 </head>
 <body>
@@ -14,8 +15,9 @@
         <section>
             <h1>Clock</h1>
             <p>{{clock.time}}</p>
+            <p>{{clock.text}}</p>
         </section>
-        <!--set alarm and addbutton-->
+
         <section>
             <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time -->
             <!-- https://vuejs.org/v2/api/#v-model -->
@@ -24,13 +26,36 @@
             <input type="submit" value="Delete Timer" v-on:click="deleteTimer">
         </section>
 
-        <!--list for-->
+        <section>
+
+                <audio src="http://onj3.andrelouis.com/phonetones/unzipped/Palm-Treo800W/Alarm5.wav" preload="auto" id="Ton1: Beeper"></audio>
+                <audio src="http://www.mountaincharlie1850.org/sounds/homer_snicker.wav" preload="auto" id="Ton2: Simpsonlaugh"></audio>
+                <audio src="http://dight310.byu.edu/media/audio/FreeLoops.com/5/5/Ocean%20Storm.wav-19044-Free-Loops.com.mp3"  preload="auto" id="Ton3: Ocean"></audio>
+                <audio src="http://www.alaska.net/~chrisaue/assets/multimedia/web_jungle.wav" preload="auto" id="Ton4: Jungle"></audio>
+                <audio src="http://jp.popapostle.com/sounds/JP/roar.wav" preload="auto" id="Ton5: Jurassic Park"></audio>
+
+
+
+                <select v-model="selected">
+                        <option selected> Ton1: Beeper</option>
+                        <option> Ton2: Simpsonlaugh</option>
+                        <option> Ton3: Ocean </option>
+                        <option> Ton4: Jungle </option>
+                        <option> Ton5: Jurassic Park </option>
+        
+                    </select>
+                    <span>Selected: {{selected}}</span>
+
+        </section>
+
         <section>
             <ul>
                 <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Range -->
-                <li v-for="item of list">{{item.time}}</li>
+               <li v-for="item of list">{{item.time}} </li>
+               
             </ul>
         </section>
+
     </div>
 </body>
 <script>
@@ -38,28 +63,44 @@
         el: "#app",
         data: {
             clock: {
-                time: "",
-                interval: null
+                time: "14:15:00",
+                interval: null,
+                text:'come to update'
             },
-        // the set alarm will stored in timer and show in the list
             timer: null,
-            list: [] //{ time: "13:25:00", interval: null}, { time: "13:35:00", interval: null}
+            //{ time: "13:25:00", interval: null}, { time: "13:35:00", interval: null}
+            list: [],
+            selected:'',
+          
         },
         mounted() {
             this.clock.interval = setInterval(this.updateTime,1000);
+            this.clock.text = setInterval(this.alarm,1000);
             this.timer = "10:15";
+
         },
         beforeDestroy () {
             clearInterval(this.clock.interval);
         },
+
         methods: {
             updateTime() {
                 const now = new Date();
                 const hours = now.getHours();
                 const minutes = now.getMinutes();
+
                 const seconds = now.getSeconds();
+                if(seconds<10){
+                    this.clock.time = hours+':' +minutes+':'+'0'+seconds;
+                }else if(hours<10){
+                    this.clock.time = '0'+hours+':' +minutes+':'+seconds;
+                }else if(minutes<10){
+                    this.clock.time = hours+':' +'0'+minutes+':'+seconds;
+                }else{
                 // Template String
-                this.clock.time = `${hours}:${minutes}:${seconds}`;
+               // this.clock.time = `${hours}:${minutes}:${seconds}`;
+               this.clock.time = hours+':' +minutes+':'+seconds;
+                }
             },
             addTimer() {
                 console.log("addTimer");
@@ -68,24 +109,31 @@
                 const mInterval = 1;
                 // const mInterval = setInterval(this.alarm, 5000);
                 this.list.push({ time: mTime, interval: mInterval});
+
             },
             alarm() {
-                alert("Attention!");
-            },
-            timeFormat(a){
-                if(a<10){
-                    return '0'+a;
+               // alert("Attention!");
+               if(this.timer==this.clock.time){
+                    this.clock.text='the time is up!';
+                    if(this.selected!=''){
+                let audio=document.getElementById(this.selected);
+                audio.play();
+            }
+
                 }else{
-                    return a;
+                    this.clock.text= '';
                 }
             },
             deleteTimer(){
                 console.log("deleteTimer");
-
-                const tTime = this.timer;
-                const tInterval = 1;
-                this.list.pop({time: tTime, interval: tInterval});
+                // console.log(this.timer);
+                const mTime = this.timer;
+                const mInterval = 1;
+                // const mInterval = setInterval(this.alarm, 5000);
+                this.list.pop({ time: mTime, interval: mInterval});
             }
+            
+
         }
     })
 </script>
