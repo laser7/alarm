@@ -13,7 +13,18 @@
             <h1>Clock</h1>
             <p>{{clock.time}}</p>
         </section>
-
+        <section>
+            <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time -->
+            <!-- https://vuejs.org/v2/api/#v-model -->
+            <input type="time" step="1" v-model="timer" required>
+            <input type="submit" value="Add Timer" v-on:click="addTimer">
+        </section>
+        <section>
+            <ul>
+                <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Range -->
+                <li v-for="item of list">{{item.time}}</li>
+            </ul>
+        </section>
     </div>
 </body>
 <script>
@@ -23,10 +34,13 @@
             clock: {
                 time: "14:15:00",
                 interval: null
-            }
+            },
+            timer: null,
+            list: [{ time: "13:25:00", interval: null}, { time: "13:35:00", interval: null}]
         },
         mounted() {
             this.clock.interval = setInterval(this.updateTime,1000);
+            this.timer = "10:15";
         },
         beforeDestroy () {
             clearInterval(this.clock.interval);
@@ -39,6 +53,17 @@
                 const seconds = now.getSeconds();
                 // Template String
                 this.clock.time = `${hours}:${minutes}:${seconds}`;
+            },
+            addTimer() {
+                console.log("addTimer");
+                // console.log(this.timer);
+                const mTime = this.timer;
+                const mInterval;
+                // const mInterval = setInterval(this.alarm, 5000);
+                this.list.push({ time: mTime, interval: mInterval});
+            },
+            alarm() {
+                alert("Attention!");
             }
         }
     })
