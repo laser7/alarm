@@ -8,11 +8,39 @@
     <script src="https://vuejs.org/js/vue.js"></script>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <section>
+            <h1>Clock</h1>
+            <p>{{clock.time}}</p>
+        </section>
+
+    </div>
 </body>
 <script>
     new Vue({
-        el: "#app"
+        el: "#app",
+        data: {
+            clock: {
+                time: "14:15:00",
+                interval: null
+            }
+        },
+        mounted() {
+            this.clock.interval = setInterval(this.updateTime,1000);
+        },
+        beforeDestroy () {
+            clearInterval(this.clock.interval);
+        },
+        methods: {
+            updateTime() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+                // Template String
+                this.clock.time = `${hours}:${minutes}:${seconds}`;
+            }
+        }
     })
 </script>
 </html>
