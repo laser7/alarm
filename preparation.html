@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="UTF-8">
+        <title>My wecker</title>
+        <script src="https://vuejs.org/js/vue.js">
+        </script>
+    </head>
+    <body>
+       
+        <div id="app">
+            <!--current time-->
+            <section >
+                <h1>Current Time</h1>
+                <p>{{showTime}}</p>
+            </section>
+            <!--time input and buttons-->
+            <section>
+               <form action="">
+                    <input type="time" required>
+                    <input type="submit" value="ADD">
+                    <input type="submit" value="STOP">
+               
+                </form>
+            </section>
+
+            <!--select the ton-->
+            <section>
+                <select >
+                    <option value="Ton1">Ton1</option>
+                    <option value="Ton2">Ton2</option>
+                    <option value="Ton3">Ton3</option>
+                    <option value="Ton4">Ton4</option>
+                </select>
+
+            </section>
+            <!--Audio-->
+       <audio src=""></audio>
+       <audio src=""></audio>
+       <audio src=""></audio>
+       <audio src=""></audio>
+        </div>
+    </body>
+    <script>
+
+        var vm = new Vue({
+            el:"#app",
+            data:{
+               // date:new Date()23
+
+            },
+     
+
+           computed:{
+
+                showTime: function(){
+                    var date = new Date();
+                    return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+                }
+            }
+        });
+
+    </script>
+</html>
