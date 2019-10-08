@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="style.css">
+ <!--<link rel="stylesheet" href="style.css">-->   
     <title>My Alarm Clock</title>
     <script src="https://vuejs.org/js/vue.js"></script>
 </head>
@@ -21,37 +21,36 @@
         <section>
             <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time -->
             <!-- https://vuejs.org/v2/api/#v-model -->
-            <input type="time" step="1" v-model="timer" required>
-            <input type="submit" value="Add Timer" v-on:click="addTimer">
-            <input type="submit" value="Delete Timer" v-on:click="deleteTimer">
+            <input class="time_input" type="time" step="1" v-model="timer" required>
+            <input class="add_button" type="submit" value="Add Timer" @click="addTimer" @keyup.enter ="submit">
+           
         </section>
 
         <section>
 
-                <audio src="http://onj3.andrelouis.com/phonetones/unzipped/Palm-Treo800W/Alarm5.wav" preload="auto" id="Ton1: Beeper"></audio>
-                <audio src="http://www.mountaincharlie1850.org/sounds/homer_snicker.wav" preload="auto" id="Ton2: Simpsonlaugh"></audio>
-                <audio src="http://dight310.byu.edu/media/audio/FreeLoops.com/5/5/Ocean%20Storm.wav-19044-Free-Loops.com.mp3"  preload="auto" id="Ton3: Ocean"></audio>
-                <audio src="http://www.alaska.net/~chrisaue/assets/multimedia/web_jungle.wav" preload="auto" id="Ton4: Jungle"></audio>
-                <audio src="http://jp.popapostle.com/sounds/JP/roar.wav" preload="auto" id="Ton5: Jurassic Park"></audio>
+                <audio src="http://onj3.andrelouis.com/phonetones/unzipped/Palm-Treo800W/Alarm5.wav" preload="auto" id="Ton: Beeper"></audio>
+                <audio src="http://www.mountaincharlie1850.org/sounds/homer_snicker.wav" preload="auto" id="Ton: Simpsonlaugh"></audio>
+                <audio src="http://dight310.byu.edu/media/audio/FreeLoops.com/5/5/Ocean%20Storm.wav-19044-Free-Loops.com.mp3"  preload="auto" id="Ton: Ocean"></audio>
+                <audio src="http://www.alaska.net/~chrisaue/assets/multimedia/web_jungle.wav" preload="auto" id="Ton: Jungle"></audio>
+                <audio src="http://jp.popapostle.com/sounds/JP/roar.wav" preload="auto" id="Ton: Jurassic Park"></audio>
 
 
 
-                <select v-model="selected">
-                        <option selected> Ton1: Beeper</option>
-                        <option> Ton2: Simpsonlaugh</option>
-                        <option> Ton3: Ocean </option>
-                        <option> Ton4: Jungle </option>
-                        <option> Ton5: Jurassic Park </option>
+                <select v-model="selected" class="ton_select">
+                        <option selected> Ton: Beeper</option>
+                        <option> Ton: Simpsonlaugh</option>
+                        <option> Ton: Ocean </option>
+                        <option> Ton: Jungle </option>
+                        <option> Ton: Jurassic Park </option>
         
                     </select>
-                    <span>Selected: {{selected}}</span>
-
+                  <!--<span>Selected: {{selected}}</span>-->  
         </section>
 
         <section>
             <ul>
                 <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Range -->
-               <li v-for="item of list">{{item.time}} </li>
+               <li v-for="(item, index) of list" key="item.id">{{item.time}} {{item.ton}} <button  class ="delete_button" @click = "buttonDelete(index)" @keyup.enter="submit">Delete timer</button> </li>
                
             </ul>
         </section>
@@ -70,14 +69,15 @@
             timer: null,
             //{ time: "13:25:00", interval: null}, { time: "13:35:00", interval: null}
             list: [],
-            selected:'',
+            selected: null
+
           
         },
         mounted() {
             this.clock.interval = setInterval(this.updateTime,1000);
             this.clock.text = setInterval(this.alarm,1000);
-            this.timer = "10:15";
-
+         //   this.timer = "10:15";
+            document.addEventListener("keydown",this.nextItem);
         },
         beforeDestroy () {
             clearInterval(this.clock.interval);
@@ -107,8 +107,10 @@
                 // console.log(this.timer);
                 const mTime = this.timer;
                 const mInterval = 1;
+                const mTon = this.selected;
+        
                 // const mInterval = setInterval(this.alarm, 5000);
-                this.list.push({ time: mTime, interval: mInterval});
+                this.list.push({ time: mTime, interval: mInterval, ton:mTon});
 
             },
             alarm() {
@@ -124,14 +126,16 @@
                     this.clock.text= '';
                 }
             },
-            deleteTimer(){
-                console.log("deleteTimer");
-                // console.log(this.timer);
+            buttonDelete(index){
+               
                 const mTime = this.timer;
+                alert("the timer on "+this.timer+ " will be deleted");
                 const mInterval = 1;
-                // const mInterval = setInterval(this.alarm, 5000);
-                this.list.pop({ time: mTime, interval: mInterval});
+      
+   
+                this.list.splice(index, 1);
             }
+
             
 
         }
