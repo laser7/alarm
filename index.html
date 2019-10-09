@@ -8,8 +8,8 @@
     <title>My Alarm Clock</title>
     <script src="https://vuejs.org/js/vue.js"></script>
 </head>
-<body>
-    <div id="app">
+<body >
+    <div id="app" >
 
         <!--current time-->
         <section>
@@ -18,15 +18,15 @@
             <p>{{clock.text}}</p>
         </section>
 
-        <section>
+        <section class="section_one">
             <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time -->
             <!-- https://vuejs.org/v2/api/#v-model -->
-            <input class="time_input" type="time" step="1" v-model="timer" required>
-            <input class="add_button" type="submit" value="Add Timer" @click="addTimer" @keyup.enter ="submit">
+            <input class="time_input" type="time" step="1" v-model="timer" required @keyup="showfirst($event)" ref="time">
+            <input class="add_button" type="submit" value="Add Timer" @click="addTimer" @keyup="show($event)" ref="add">
            
         </section>
 
-        <section>
+        <section class="section_two">
 
                 <audio src="http://onj3.andrelouis.com/phonetones/unzipped/Palm-Treo800W/Alarm5.wav" preload="auto" id="Ton: Beeper"></audio>
                 <audio src="http://www.mountaincharlie1850.org/sounds/homer_snicker.wav" preload="auto" id="Ton: Simpsonlaugh"></audio>
@@ -36,7 +36,7 @@
 
 
 
-                <select v-model="selected" class="ton_select">
+                <select v-model="selected" class="ton_select" @keyup="showselect($event)" ref="select">
                         <option selected> Ton: Beeper</option>
                         <option> Ton: Simpsonlaugh</option>
                         <option> Ton: Ocean </option>
@@ -48,9 +48,12 @@
         </section>
 
         <section>
-            <ul>
+            <ul class="li_list" >
                 <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Range -->
-               <li v-for="(item, index) of list" key="item.id">{{item.time}} {{item.ton}} <button  class ="delete_button" @click = "buttonDelete(index)" @keyup.enter="submit">Delete timer</button> </li>
+               <li  class ="delete_button" v-for="(item, index) of list" key="item.id">
+                   {{item.time}} {{item.ton}} 
+                   <button  ref="delete" @click = "buttonDelete(index)" @keyup =" showdelete($event)">Delete timer</button> 
+                </li>
                
             </ul>
         </section>
@@ -69,18 +72,22 @@
             timer: null,
             //{ time: "13:25:00", interval: null}, { time: "13:35:00", interval: null}
             list: [],
-            selected: null
-
+            selected: null,
+            
           
         },
         mounted() {
             this.clock.interval = setInterval(this.updateTime,1000);
             this.clock.text = setInterval(this.alarm,1000);
-         //   this.timer = "10:15";
-            document.addEventListener("keydown",this.nextItem);
+            this.timer = "10:15";
+            this.$refs.time.focus();
+            
+
+          
         },
         beforeDestroy () {
             clearInterval(this.clock.interval);
+          
         },
 
         methods: {
@@ -134,11 +141,59 @@
       
    
                 this.list.splice(index, 1);
+            },
+            showall:function(ev){
+                if(ev.keyCode == 39){
+                    this,$refs.time.focus();
+                }
+            },
+            showfirst:function(ev){
+                if(ev.keyCode==39){
+                    
+                    this.$refs.add.focus();
+                }else if(ev.keyCode == 37){
+                    this.$refs.delete.focus();
+                }
+            },
+            show:function(ev){
+                        if(ev.keyCode == 13){
+                      
+                          //  addTimer();
+                        }else if(ev.keyCode == 37){
+                           
+                       
+                            this.$refs.time.focus();
+                     
+                        }else if(ev.keyCode == 39){
+                            
+                            this.$refs.select.focus();
+                        }
+                    },
+            showdelete:function(ev){
+                        if(ev.keyCode == 13){
+                        
+                        //    buttonDelete();
+                        }else if(ev.keyCode == 37){
+                            this.$refs.select.focus();
+                        }else if(ev.keyCode == 39){
+                            this.$refs.time.focus();
+                        }
+                    },
+            showselect:function(ev){
+                if(ev.keyCode == 13){
+                            alert('selected');
+                           
+                        }else if(ev.keyCode == 37){
+                            this.$refs.add.focus();
+                        }else if(ev.keyCode == 39){
+                            this.$refs.delete.focus();
+                            
+                        }
             }
 
-            
+
 
         }
-    })
+    });
 </script>
 </html>
