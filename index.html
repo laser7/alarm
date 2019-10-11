@@ -36,7 +36,7 @@
         <div class="section_timeradd  col-lg-8  col-md-8 col-sm-8">
             <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time -->
             <!-- https://vuejs.org/v2/api/#v-model -->
-            <input class="time_input input-lg" type="time" step="1" v-model="timer" required @keyup="showfirst($event)" ref="time">
+            <input class="time_input input-lg" type="time" step="1" v-model="timer" required @keyup="showfirst($event)" ref="time" required>
           </div>
           <div class="section_timeradd  col-lg-4  col-md-4 col-sm-4">
             <input class="add_button button" type="submit" value="Add Wecker" @click="addTimer" @keyup="show($event)" ref="add">
@@ -72,7 +72,7 @@
                 <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Range -->
                <li  class ="delete_button" v-for="(item, index) of list" key="item.id">
                     {{item.time}}   &nbsp;   {{item.ton}} &nbsp;&nbsp;&nbsp;&nbsp;
-                   <button  class="button" ref="delete" @click = "buttonDelete(index)" @keyup =" showdelete($event)">Delete Wecker</button> 
+                   <button id="delete" class="button" ref="delete" @click = "buttonDelete(index)" @keyup =" showdelete($event)">Delete Wecker</button> 
                 </li>
                
             </ul>
@@ -125,6 +125,8 @@
                     this.clock.time = hours+':' +'0'+minutes+':'+seconds;
                 }else if(minutes<10&& seconds<10){
                     this.clock.time = hours+':' +'0'+minutes+':'+'0'+seconds;
+                }else if(hours<10 && minutes<10){
+                    this.clock.time = '0'+hours+':'+'0'+minutes+':'+seconds;
                 }
                 else{
                 // Template String
@@ -175,7 +177,7 @@
                     
                     this.$refs.add.focus();
                 }else if(ev.keyCode == 37){
-                    this.$refs.delete.focus();
+                    this.$refs.delete[0].focus();
                 }
             },
             show:function(ev){
@@ -203,14 +205,16 @@
                         }
                     },
             showselect:function(ev){
-                if(ev.keyCode == 13){
+                         if(ev.keyCode == 13){
                             alert('selected');
                            
                         }else if(ev.keyCode == 37){
                             this.$refs.add.focus();
                         }else if(ev.keyCode == 39){
-                            this.$refs.delete.focus();
-                            
+                        
+                            this.$refs.delete[0].focus();
+                          
+                          
                         }
             }
 
