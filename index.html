@@ -70,7 +70,7 @@
         <div class="list  col-lg-8  col-md-8 col-sm-8 text-center">
             <ul class="li_list list-group " >
                 <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Range -->
-               <li  class ="delete_button" v-for="(item, index) of list" key="item.id">
+               <li  class ="delete_button" v-for="(item, index) of list" >
                     {{item.time}}   &nbsp;   {{item.ton}} &nbsp;&nbsp;&nbsp;&nbsp;
                    <button id="delete" class="button" ref="delete" @click = "buttonDelete(index)" @keyup =" showdelete($event)">Delete Wecker</button> 
                 </li>
@@ -182,7 +182,7 @@
                 const mInterval = 1;
       
    
-                this.list.splice(index, 1);
+                this.list.splice(this.list.indexOf(index), 1);
             },
             showall:function(ev){
                 if(ev.keyCode == 39){
@@ -203,7 +203,7 @@
             show:function(ev){
                         if(ev.keyCode == 13){
                       
-                            addTimer();
+                            this.addTimer();
                         }else if(ev.keyCode == 37){
                            
                        
@@ -219,7 +219,7 @@
             showdelete:function(ev){
                         if(ev.keyCode == 13){
                         
-                           buttonDelete();
+                           this.buttonDelete();
                         }else if(ev.keyCode == 37){
                             this.$refs.select.focus();
                         }else if(ev.keyCode == 39){
